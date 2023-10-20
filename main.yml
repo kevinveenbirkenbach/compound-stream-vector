@@ -1,0 +1,32 @@
+import csv
+import math
+
+def compound_vector_from_csv(file_path):
+    total_x = 0
+    total_y = 0
+
+    # Open CSV file and read data
+    with open(file_path, 'r') as file:
+        reader = csv.DictReader(file)
+        
+        for row in reader:
+            direction = float(row['direction'])
+            magnitude = float(row['magnitude'])
+
+            # Convert to Cartesian coordinates
+            x = magnitude * math.cos(math.radians(direction))
+            y = magnitude * math.sin(math.radians(direction))
+
+            total_x += x
+            total_y += y
+
+    # Convert back to polar form
+    compound_magnitude = math.sqrt(total_x**2 + total_y**2)
+    compound_direction = math.degrees(math.atan2(total_y, total_x)) % 360  # Modulo 360 to ensure it's in the range [0, 360)
+
+    return compound_direction, compound_magnitude
+
+if __name__ == '__main__':
+    file_path = input("Please enter the path to your CSV file: ")
+    compound_direction, compound_magnitude = compound_vector_from_csv(file_path)
+    print(f"Compound Vector: Direction = {compound_direction:.2f}°, Magnitude = {compound_magnitude:.2f} knots")
